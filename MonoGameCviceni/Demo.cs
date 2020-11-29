@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace MonoGameCviceni
 {
@@ -49,6 +50,21 @@ namespace MonoGameCviceni
             y = _vyskaOkna / 2 - h / 2;
 
             Color[] pixely = new Color[prumer * prumer];
+
+            for (int i = 0; i < prumer; i++)
+            {
+                for (int j = 0; j < prumer; j++)
+                {
+                    if (Math.Sqrt(Math.Pow(j - polomer, 2) + Math.Pow(i - polomer, 2)) < polomer)
+                    {
+                        pixely[100 * i + j] = barva;
+                    }
+                    else
+                    {
+                        pixely[100 * i + j] = Color.Transparent;
+                    }
+                }
+            }
 
             _textura = new Texture2D(GraphicsDevice, prumer, prumer);
             _textura.SetData(pixely);
