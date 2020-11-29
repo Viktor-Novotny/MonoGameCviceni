@@ -15,7 +15,8 @@ namespace MonoGameCviceni
 
         private Texture2D _textura;
 
-        private int h, w, x, y, prumer, polomer;
+        private int h, w, x, y, prumer, polomer, rychlost;
+        public MouseState kurzor;
 
         private Color barva;
 
@@ -74,17 +75,127 @@ namespace MonoGameCviceni
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+
+            rychlost = 0;
+            kurzor = Mouse.GetState();
+
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            if (x >= _sirkaOkna - prumer)
+            {
+                x = _sirkaOkna - prumer;
+            }
+            if (x <= 0)
+            {
+                x = 0;
+            }
+            if (y >= _vyskaOkna - prumer)
+            {
+                y = _vyskaOkna - prumer;
+            }
+            if (y <= 0)
+            {
+                y = 0;
+            }
+
+
+            if (kurzor.X - 200 < x + prumer && kurzor.X + 200 > x && kurzor.Y - 200 < y + prumer && kurzor.Y + 200 > y)
+            {
+                rychlost = 1;
+
+                barva = Color.LightGray;
+            }
+            else
+            {
+                rychlost = 0;
+
+                barva = Color.Gray;
+            }
+            if (kurzor.X > x && kurzor.X < x + w && kurzor.Y > y && kurzor.Y < y + h)
+            {
+                rychlost = 0;
+
+                barva = Color.Black;
+            }
+
+            if (rychlost != 0)
+            {
+                if (kurzor.X < x && kurzor.X > x - 200 && x < _sirkaOkna - prumer)
+                {
+                    x += rychlost;
+
+                    if (kurzor.X < x && kurzor.X > x - 100)
+                    {
+                        rychlost = 5;
+
+                        x += rychlost;
+                        if (kurzor.X < x && kurzor.X > x - 50)
+                        {
+                            rychlost = 10;
+
+                            x += rychlost;
+                        }
+                    }
+                }
+                if (kurzor.X < x + prumer + 200 && kurzor.X > x + prumer && x > 0)
+                {
+                    x -= rychlost;
+                    if (kurzor.X < x + prumer + 100 && kurzor.X > x + prumer)
+                    {
+                        rychlost = 5;
+
+                        x -= rychlost;
+                        if (kurzor.X < x + prumer + 50 && kurzor.X > x + prumer)
+                        {
+                            rychlost = 10;
+
+                            x -= rychlost;
+                        }
+                    }
+                }
+                if (kurzor.Y < y && kurzor.Y > y - 200 && y < _vyskaOkna - prumer)
+                {
+                    y += rychlost;
+
+                    if (kurzor.Y < y && kurzor.Y > y - 100)
+                    {
+                        rychlost = 5;
+
+                        y += rychlost;
+                        if (kurzor.Y < y && kurzor.Y > y - 50)
+                        {
+                            rychlost = 10;
+
+                            y += rychlost;
+                        }
+                    }
+                }
+                if (kurzor.Y < y + prumer + 200 && kurzor.Y > y + prumer && y > 0)
+                {
+                    y -= rychlost;
+                    if (kurzor.Y < y + prumer + 100 && kurzor.Y > y + prumer)
+                    {
+                        rychlost = 5;
+
+                        y -= rychlost;
+                        if (kurzor.Y < y + prumer + 50 && kurzor.Y > y + prumer)
+                        {
+                            rychlost = 10;
+
+                            y -= rychlost;
+                        }
+                    }
+                }
+            }
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.White);
 
             _spriteBatch.Begin();
             _spriteBatch.Draw(_textura, new Rectangle(x, y, w, h), barva);
